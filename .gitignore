@@ -20,6 +20,7 @@
 
 # Keil
 rtthread_nucleo_f302r8/MDK-ARM/rtthread_nucleo_f302r8
+rtthread_hc32f005/example/flash/MDK/output
 *.uvguix.*
 EventRecorderStub.scvd
 JLinkLog.txt
