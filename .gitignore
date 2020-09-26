@@ -1,0 +1,29 @@
+
+
+# Log files
+**.log 
+
+# Compiled Binaries
+#*.bin
+*.elf
+#*.hex
+*.map
+*.iex
+*.crf
+*.d
+*.o
+
+
+# Trash files
+*.bak
+
+
+# Keil
+rtthread_nucleo_f302r8/MDK-ARM/rtthread_nucleo_f302r8
+*.uvguix.*
+EventRecorderStub.scvd
+JLinkLog.txt
+
+
+# VSCode
+.vscode

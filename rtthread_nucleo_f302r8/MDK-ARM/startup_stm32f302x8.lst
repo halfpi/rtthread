@@ -548,12 +548,13 @@ ARM Macro Assembler    Page 9
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=
 interwork --depend=rtthread_nucleo_f302r8\startup_stm32f302x8.d -ortthread_nucl
-eo_f302r8\startup_stm32f302x8.o -I.\RTE\_rtthread_nucleo_f302r8 -IC:\Users\Stev
-en\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:\Users\Steven
-\AppData\Local\Arm\Packs\Keil\STM32F3xx_DFP\2.1.0\Drivers\CMSIS\Device\ST\STM32
-F3xx\Include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SET
-A 529" --predefine="_RTE_ SETA 1" --predefine="STM32F302x8 SETA 1" --list=start
-up_stm32f302x8.lst startup_stm32f302x8.s
+eo_f302r8\startup_stm32f302x8.o -I.\RTE\RTOS -I.\RTE\_rtthread_nucleo_f302r8 -I
+C:\Users\Steven\AppData\Local\Arm\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:
+\Users\Steven\AppData\Local\Arm\Packs\Keil\STM32F3xx_DFP\2.1.0\Drivers\CMSIS\De
+vice\ST\STM32F3xx\Include -IC:\Users\Steven\AppData\Local\Arm\Packs\RealThread\
+RT-Thread\3.1.3\include --predefine="__MICROLIB SETA 1" --predefine="__UVISION_
+VERSION SETA 529" --predefine="_RTE_ SETA 1" --predefine="STM32F302x8 SETA 1" -
+-list=startup_stm32f302x8.lst startup_stm32f302x8.s
 
 
 
