@@ -93,6 +93,7 @@ void EnableNvic(uint32_t u32Irq,uint8_t u8Level,boolean_t bEn)
     }
 }
 
+#if 0
 /**
  *******************************************************************************
  ** \brief NVIC hardware fault 中断实现
@@ -109,6 +110,7 @@ void HardFault_Handler(void)
         ;
     }
 }
+#endif
 
 /**
  *******************************************************************************

@@ -53,12 +53,15 @@
  * Include files
  ******************************************************************************/
 #include "ddl.h"
-#include "flash.h"
+#include "gpio.h"
+#include <rtthread.h>
 
 /******************************************************************************
  * Local pre-processor symbols/macros ('#define')
  ******************************************************************************/
-//#define RUN_IN_RAM 1    //need to config *.icf
+/*继电器*/
+#define RELAY_GPIO_PORT         2
+#define RELAY_GPIO_PIN          3
 
 /******************************************************************************
  * Global variable definitions (declared in header file with 'extern')
@@ -85,100 +88,6 @@ static volatile uint32_t u32FlashTestFlag   = 0;
  * Function implementation - global ('extern') and local ('static')
  ******************************************************************************/
 
-/*******************************************************************************
- * FLASH 中断服务函数
- ******************************************************************************/
- void FlashInt(void)
- {
-    if (TRUE == Flash_GetIntFlag(flash_int0))
-    {
-        Flash_ClearIntFlag(flash_int0);
-        u32FlashTestFlag |= 0x01;
-        Flash_DisableIrq(flash_int0);
-    }
-    if (TRUE == Flash_GetIntFlag(flash_int1))
-    {
-        Flash_ClearIntFlag(flash_int1);
-        u32FlashTestFlag |= 0x02;
-        Flash_DisableIrq(flash_int1);
-    }
-      
- }
-   
-   
-/*******************************************************************************
- * FLASH 编程测试
- ******************************************************************************/
-en_result_t FlashWriteTest(void)
-{
-    en_result_t       enResult = Error;
-    uint32_t          u32Addr  = 0x3ff0;
-    uint8_t           u8Data   = 0x5a;
-    uint16_t          u16Data  = 0x5a5a;
-    uint32_t          u32Data  = 0x5a5a5a5a;
-
-    Flash_Init(FlashInt, 0);
-    
-    Flash_SectorErase(u32Addr);
-    
-    enResult = Flash_WriteByte(u32Addr, u8Data);
-    if (Ok == enResult)
-    {
-        if(*((volatile uint8_t*)u32Addr) == u8Data)
-        {
-            enResult = Ok;
-        }
-        else
-        {
-            return enResult;
-        }
-    }
-    else
-    {
-        enResult = Error;
-        return enResult;
-    }  
-
-    u32Addr += 2;
-    enResult = Flash_WriteHalfWord(u32Addr, u16Data);
-    if (Ok == enResult)
-    {
-        if(*((volatile uint16_t*)u32Addr) == u16Data)
-        {
-            enResult = Ok;
-        }
-        else
-        {
-            return enResult;
-        }
-    }
-    else
-    {
-        return enResult;
-    }
-
-    u32Addr += 2;
-    enResult = Flash_WriteWord(u32Addr, u32Data);
-    if (Ok == enResult)
-    {
-        if(*((volatile uint32_t*)u32Addr) == u32Data)
-        {
-            enResult = Ok;
-        }
-        else
-        {
-            return enResult;
-        }
-    }
-    else
-    {
-        return enResult;
-    }  
-    
-    return enResult;
-}
-
-
 /**
  ******************************************************************************
  ** \brief  Main function of project
@@ -191,14 +100,16 @@ en_result_t FlashWriteTest(void)
 
 int32_t main(void)
 {
-    volatile uint8_t u8TestFlag = 0;
+    Gpio_InitIOExt(RELAY_GPIO_PORT, RELAY_GPIO_PIN, GpioDirOut, FALSE, FALSE, FALSE, FALSE);
+    Gpio_SetIO(RELAY_GPIO_PORT, RELAY_GPIO_PIN, 0);
     
-    if(Ok != FlashWriteTest())
+    while (1)
     {
-        u8TestFlag |= 0x01;
-    }   
-    
-    while (1);
+        Gpio_SetIO(RELAY_GPIO_PORT, RELAY_GPIO_PIN, 1);
+        rt_thread_mdelay(2000);
+        Gpio_SetIO(RELAY_GPIO_PORT, RELAY_GPIO_PIN, 0);
+        rt_thread_mdelay(2000);
+    }
 }
 
 /******************************************************************************
