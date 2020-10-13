@@ -57,6 +57,7 @@ static void thread2_entry(void *param)
 /* 删除线程示例的初始化 */
 int thread_sample(void)
 {
+    // rt_thread_create 动态创建线程，占用动态内存空间
     /* 创建线程1，名称是thread1，入口是thread1_entry*/
     tid1 = rt_thread_create("thread1",
                             thread1_entry, RT_NULL,
@@ -67,6 +68,7 @@ int thread_sample(void)
     if (tid1 != RT_NULL)
         rt_thread_startup(tid1);
 
+    // rt_thread_init 静态创建线程，静态定义方式会占用RW/ZI空间
     /* 初始化线程2，名称是thread2，入口是thread2_entry */
     rt_thread_init(&thread2,
                    "thread2",
@@ -82,3 +84,35 @@ int thread_sample(void)
 
 /* 导出到 msh 命令列表中 */
 MSH_CMD_EXPORT(thread_sample, thread sample);
+#if 0
+// MSH_CMD_EXPORT宏解析
+typedef long (*syscall_func)(void);
+
+/* system call table */
+struct finsh_syscall
+{
+    const char*     name;       /* the name of system call */
+#if defined(FINSH_USING_DESCRIPTION) && defined(FINSH_USING_SYMTAB)
+    const char*     desc;       /* description of system call */
+#endif
+    syscall_func func;      /* the function address of system call */
+};
+
+                const char __fsym___cmd_thread_sample_name[] = "__cmd_thread_sample";            \
+                const char __fsym___cmd_thread_sample_desc[] = "thread sample";           \
+                __declspec(allocate("FSymTab$f"))                   \
+                const struct finsh_syscall __fsym___cmd_thread_sample =           \
+                {                           \
+                    __fsym___cmd_thread_sample_name,    \
+                    __fsym___cmd_thread_sample_desc,    \
+                    (syscall_func)&thread_sample     \
+                };
+            #pragma comment(linker, "/merge:FSymTab=mytext")
+#endif
+
+// 测试
+void test(void)
+{
+    rt_kprintf("thread test\n");
+}
+MSH_CMD_EXPORT(test, test MSH_CMD_EXPORT macro);
